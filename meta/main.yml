@@ -1,0 +1,19 @@
+galaxy_info:
+  author: Adnan Hodzic
+  description: Perform upgrade of all software packages on Ubuntu host
+
+  license: GPLv3
+
+  min_ansible_version: 2.0
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+
+  galaxy_tags:
+  - development
+  - system
+  - ubuntu
+  - packages
+  - upgrade

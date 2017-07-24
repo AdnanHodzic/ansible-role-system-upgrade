@@ -28,7 +28,7 @@
 - name: Wait for server to come back up after reboot
   local_action: wait_for host={{ inventory_hostname }}
                 port=22 state=started delay=10 timeout=320
-  become: no
+  when: reboot_flag.stat.exists == true
 
 - debug:
     msg: "Server is back up and running"

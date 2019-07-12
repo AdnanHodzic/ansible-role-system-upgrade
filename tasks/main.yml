@@ -1,33 +1,26 @@
 ---
-- name: Update APT cache
-  apt:
+- name: Update all packages 
+  yum:
     update_cache: yes
-    cache_valid_time: 3600
+    name: '*'
+    state: latest
 
-- name: Check if there are available updates
-  command: /usr/lib/update-notifier/apt-check --package-names
-  register: pkg_list
-
-- name: Perform upgrade of all packages to the latest version
-  apt:
-    upgrade: dist
-  when: pkg_list.stderr != ""
-
-- name: Check if a reboot is required
-  stat: path=/var/run/reboot-required get_md5=no
-  register: reboot_flag
+- name: check if reboot is required
+  shell: needs-restarting -r
+  ignore_errors: true 
+  register: reboot_required
 
 - name: Reboot the server
-  shell: sleep 2 && shutdown -r now "Ansible updates triggered"
+  shell: ( /bin/sleep 5 ; shutdown -r now "Ansible updates triggered" ) &
   async: 1
   poll: 0
   ignore_errors: yes
-  when: reboot_flag.stat.exists == true
+  when: "'required' in reboot_required.stdout"
 
 - name: Wait for server to come back up after reboot
   local_action: wait_for host={{ inventory_hostname }}
                 port=22 state=started delay=10 timeout=320
-  when: reboot_flag.stat.exists == true
+  when: "'required' in reboot_required.stdout"
 
 - debug:
     msg: "Server is back up and running"

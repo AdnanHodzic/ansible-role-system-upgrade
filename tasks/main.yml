@@ -1,16 +1,26 @@
 ---
-- name: Update all packages 
-  yum:
+- name: Update APT cache
+  apt:
     update_cache: yes
-    name: '*'
-    state: latest
+    cache_valid_time: 3600
 
-- name: Check if reboot is required
-  shell: needs-restarting -r
-  ignore_errors: true 
-  register: reboot_required
+- name: Check if there are available updates
+  command: /usr/lib/update-notifier/apt-check --package-names
+  register: pkg_list
+
+- name: Perform upgrade of all packages to the latest version
+  apt:
+    upgrade: dist
+  when: pkg_list.stderr != ""
+
+- name: Check if a reboot is required
+  stat: path=/var/run/reboot-required get_md5=no
+  register: reboot_flag
 
 - name: Reboot the server is needed
   reboot:
     reboot_timeout: 300
-  when: "'required' in reboot_required.stdout"
+  when: reboot_flag.stat.exists == true
+
+- debug:
+    msg: "Server is back up and running"

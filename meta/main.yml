@@ -1,19 +1,19 @@
 galaxy_info:
-  author: iMartzen
-  description: Perform upgrade of all software packages on Centos host
+  author: Adnan Hodzic
+  description: Perform upgrade of all software packages on Ubuntu host
 
   license: GPLv3
 
   min_ansible_version: 2.0
 
   platforms:
-  - name: Centos
+  - name: Ubuntu
     versions:
     - all
 
   galaxy_tags:
   - development
   - system
-  - centos
+  - ubuntu
   - packages
   - upgrade

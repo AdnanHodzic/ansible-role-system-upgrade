@@ -1,6 +1,6 @@
 galaxy_info:
   author: Adnan Hodzic
-  description: Perform upgrade of all software packages on Ubuntu host
+  description: Perform upgrade of all software packages on Ubuntu or Debian host.
 
   license: GPLv3
 
@@ -10,10 +10,14 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - all
+  - name: Debian
+    versions:
+    - all
 
   galaxy_tags:
   - development
   - system
   - ubuntu
+  - debian
   - packages
   - upgrade
